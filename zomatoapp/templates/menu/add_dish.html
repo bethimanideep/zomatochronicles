@@ -1,0 +1,78 @@
+{% extends "menu/base.html" %}
+
+{% block title %}Add New Dish{% endblock %}
+
+{% block content %}
+{% block style %}
+<style>
+    #container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+    }
+    
+    .add-dish-form {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        padding: 5%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    /* Style for input labels */
+    .add-dish-form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    /* Style for input fields */
+    .add-dish-form input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    /* Style for buttons */
+    .add-dish-form button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        /* Center align the button */
+    }
+    .add-dish-form button[type="submit"]:hover{
+        color: #32de84;
+    }
+
+    /* Style for back link */
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+    button:hover {
+        color:#32de84;
+    }
+</style>
+{% endblock %}
+<div id="container">
+
+    <form method="post" class="add-dish-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Add Dish</button>
+    </form>
+</div>
+
+<a href="{% url 'menu:menu_list' %}">Back to Menu List</a>
+{% endblock %}

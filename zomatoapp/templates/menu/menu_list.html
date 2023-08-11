@@ -1,0 +1,119 @@
+{% extends 'menu/base.html' %}
+
+{% block title %}Menu List{% endblock %}
+
+{% block content %}
+{% block style %}
+<style>
+    button {
+        background-color: #007bff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        margin: 20px auto 0;
+        /* Center align the button horizontally */
+    }
+
+    a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: #32de84;
+        outline: none;
+    }
+
+    #container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50vh;
+        width: 70%;
+        margin: auto;
+        /* Center align vertically and set a minimum height */
+    }
+
+    /* Adjusted styles for the table */
+    .menu-table {
+        width: 95%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow-x: auto;
+        /* Add horizontal scrolling for smaller screens */
+    }
+
+    /* Style for table headers */
+    .menu-table th {
+        font-weight: bold;
+        text-align: left;
+        padding: 10px;
+        background-color: #f5f5f5;
+    }
+
+    /* Style for table cells */
+    .menu-table td {
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+
+    /* Style for edit and delete links */
+    .menu-table a {
+        color: #007bff;
+        margin-right: 10px;
+        text-decoration: none;
+    }
+
+    /* Style for "Add New Dish" link */
+    .add-dish-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+
+    /* Define a CSS class for links */
+    .link-style {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .link-style:hover {
+        color: #32de84;
+        /* Change color on hover */
+    }
+</style>
+{% endblock %}
+<div id="container">
+
+    <table class="menu-table">
+        <thead>
+            <tr>
+                <th>Dish Name</th>
+                <th>Price</th>
+                <th>Availability</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dish in dishes %}
+            <tr>
+                <td>{{ dish.dish_name }}</td>
+                <td>{{ dish.price }}</td>
+                <td>{{ dish.availability }}</td>
+                <td>
+                    <a href="{% url 'menu:edit_dish' dish.pk %}" class="link-style">Edit</a>
+                    <a href="{% url 'menu:delete_dish' dish.pk %}" class="link-style">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+<button type="submit"><a href="">Want To Place Order</a></button>
+{% endblock %}

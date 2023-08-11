@@ -1,0 +1,12 @@
+{% extends "menu/base.html"%}
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Hello!</h1>
+    <p class="lead">Tech Stack:- Python, Django, Sqlite</p>
+    <p>Zomato Chronicles is a restaurant management web app built using Django. It allows users to view a menu, adding dishes, place
+        orders with dish quantities, and track order statuses. Managers can update order statuses and cancel orders,
+        while customers can place and monitor their orders.</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="{% url 'menu:add_dish' %}" role="button">Do Crud By Adding Dishes</a>
+</div>
+{% endblock content %}

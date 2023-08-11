@@ -1,0 +1,17 @@
+{% extends "menu/base.html" %}
+
+{% block title %}Edit Dish{% endblock %}
+
+{% block content %}
+<h2>Edit Dish</h2>
+
+<form method="post" action="{% url 'menu:edit_dish' dish.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="hidden" name="dish_id" value="{{ dish.id }}">
+    <button type="submit">Update Dish</button>
+</form>
+
+<a href="{% url 'menu:menu_list' %}">Back to Menu List</a>
+{% endblock %}

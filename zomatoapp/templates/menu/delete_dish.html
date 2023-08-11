@@ -1,0 +1,17 @@
+{% extends "menu/base.html" %}
+
+{% block title %}Delete Dish{% endblock %}
+
+{% block content %}
+<h2>Delete Dish</h2>
+
+<p>Are you sure you want to delete the dish "{{ dish.dish_name }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="dish_id" value="{{ dish.id }}">
+    <button type="submit">Confirm Delete</button>
+</form>
+
+<a href="{% url 'menu:menu_list' %}">Cancel</a>
+{% endblock %}

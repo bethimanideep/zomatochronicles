@@ -1,0 +1,131 @@
+{% extends "menu/base.html" %}
+
+{% block title %}Take Order{% endblock %}
+
+{% block content %}
+{% block style %}
+<style>
+    #container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+    }
+
+    .order-form {
+        /* width: 35%; */
+        max-width: 800px;
+        margin: auto;
+        padding: 4%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        overflow-x: auto; /* Add horizontal scrolling for smaller screens */
+    }
+
+    /* Style for field labels */
+    .order-form label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    /* Style for input fields */
+    .order-form input[type="text"],
+    .order-form input[type="number"] {
+        width: 100%;
+        /* padding: 10px; */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    /* Style for checkboxes */
+    .order-form input[type="checkbox"] {
+        margin-top: 0;
+        margin-right: 5px;
+    }
+
+    /* Style for table */
+    .order-form table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Style for table headers */
+    .order-form th {
+        font-weight: bold;
+        text-align: left;
+        padding: 10px;
+        background-color: #f5f5f5;
+    }
+
+    /* Style for table cells */
+    .order-form td {
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+
+    /* Style for buttons */
+    .order-form button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        /* Center align the button */
+    }
+    .order-form button[type="submit"]:hover{
+        color: #32de84;
+    }
+    /* Style for back link */
+    .back-link {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+<div id="container">
+
+    <form method="post" action="{% url 'menu:place_order' %}" class="order-form">
+        {% csrf_token %}
+
+        <div class="field-errors">
+            {{ form.customer_name.errors }}
+        </div>
+        <label for="{{ form.customer_name.id_for_label }}">Customer Name:</label>
+        {{ form.customer_name }}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Dish</th>
+                    <th>Price</th>
+                    <th>Select Item</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dish in dishes %}
+                <tr>
+                    <td>{{ dish.dish_name }}</td>
+                    <td>Rs {{ dish.price }}</td>
+                    <td>
+                        <input type="checkbox" name="dishes" value="{{ dish.pk }}">
+                    </td>
+                    <td>
+                        <input type="number" name="quantity_{{ dish.pk }}" value="1" min="1" class="quantity-input">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit">Place Order</button>
+    </form>
+
+</div>
+{% endblock %}
