@@ -4,116 +4,104 @@
 
 {% block content %}
 {% block style %}
+
 <style>
-    button {
+    .wrapper {
+        height: 100%; /* Ensure the card takes up full height */
+    }
+    
+    .card {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card img {
+        width: 100%; /* Make the image fit the width of the card */
+        height: 300px; /* Allow the image to adjust its height while maintaining aspect ratio */
+        border-radius: 10px 10px 0 0; /* Rounded corners for the top */
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .card h5 {
+        margin: 0;
+        font-size: 24px;
+        color: #333333;
+    }
+
+    .card p {
+        margin: 5px 0;
+        color: #666666;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .btn {
         background-color: #007bff;
-        padding: 10px 20px;
+        color: white;
         border: none;
         border-radius: 5px;
+        padding: 8px 15px;
+        font-size: 14px;
         cursor: pointer;
-        display: block;
-        margin: 20px auto 0;
-        /* Center align the button horizontally */
+        transition: background-color 0.3s ease, transform 0.2s;
     }
 
-    a {
-        text-decoration: none;
-        color: #fff;
-        font-weight: bold;
+    .btn:hover {
+        transform: scale(1.05);
     }
-
-    a:hover {
-        text-decoration: none;
-        color: #32de84;
-        outline: none;
-    }
-
-    #container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 50vh;
-        width: 70%;
-        margin: auto;
-        /* Center align vertically and set a minimum height */
-    }
-
-    /* Adjusted styles for the table */
-    .menu-table {
-        width: 95%;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        overflow-x: auto;
-        /* Add horizontal scrolling for smaller screens */
-    }
-
-    /* Style for table headers */
-    .menu-table th {
-        font-weight: bold;
-        text-align: left;
-        padding: 10px;
-        background-color: #f5f5f5;
-    }
-
-    /* Style for table cells */
-    .menu-table td {
-        padding: 10px;
-        border-top: 1px solid #ccc;
-    }
-
-    /* Style for edit and delete links */
-    .menu-table a {
-        color: #007bff;
-        margin-right: 10px;
-        text-decoration: none;
-    }
-
-    /* Style for "Add New Dish" link */
-    .add-dish-link {
-        display: block;
-        text-align: center;
-        margin-top: 20px;
-        font-weight: bold;
-    }
-
-    /* Define a CSS class for links */
-    .link-style {
-        text-decoration: none;
-        color: #007bff;
-    }
-
-    .link-style:hover {
-        color: #32de84;
-        /* Change color on hover */
+    .container{
+        padding: 5%;
     }
 </style>
+
 {% endblock %}
-<div id="container">
 
-    <table class="menu-table">
-        <thead>
-            <tr>
-                <th>Dish Name</th>
-                <th>Price</th>
-                <th>Availability</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for dish in dishes %}
-            <tr>
-                <td>{{ dish.dish_name }}</td>
-                <td>{{ dish.price }}</td>
-                <td>{{ dish.availability }}</td>
-                <td>
-                    <a href="{% url 'menu:edit_dish' dish.pk %}" class="link-style">Edit</a>
-                    <a href="{% url 'menu:delete_dish' dish.pk %}" class="link-style">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <div class="row">
+        {% for dish in dishes %}
+        <div class="col-md-4 mb-4 wrapper">
+            <div class="card">
+                {% if dish.availability %}
+                <div>
+                    <img src="{{ dish.image_url }}" alt="">
+                </div>
+                {% else %}
+                <div class="blurred-card" style="background-image: url('{{ dish.image_url }}'); background-size: cover; background-position: center;">
+                    <img src="https://img.freepik.com/free-vector/red-stamp-white-background_1035-4808.jpg?w=740&t=st=1691795475~exp=1691796075~hmac=d5d19216256cf105864b331d213e66020a117197a043a8e4a2788f20ddee3b35" alt="" style="opacity: 0.5;">
+                </div>
+                {% endif %}
 
+                <div class="card-content">
+                    <h5>{{ dish.dish_name }}</h5>
+                    <p>Rs{{ dish.price }}</p>
+                    <div class="btn-container">
+                        <a href="{% url 'menu:edit_dish' dish.pk %}" class="btn btn-primary">Edit</a>
+                        <form method="post" action="{% url 'menu:delete_dish' dish.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-<button type="submit"><a href="">Want To Place Order</a></button>
+
 {% endblock %}

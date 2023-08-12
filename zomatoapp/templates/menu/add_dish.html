@@ -11,7 +11,7 @@
         align-items: center;
         height: 90vh;
     }
-    
+
     .add-dish-form {
         max-width: 400px;
         margin: 0 auto;
@@ -49,7 +49,8 @@
         margin: 0 auto;
         /* Center align the button */
     }
-    .add-dish-form button[type="submit"]:hover{
+
+    .add-dish-form button[type="submit"]:hover {
         color: #32de84;
     }
 
@@ -59,8 +60,9 @@
         text-align: center;
         margin-top: 10px;
     }
+
     button:hover {
-        color:#32de84;
+        color: #32de84;
     }
 </style>
 {% endblock %}
@@ -68,10 +70,22 @@
 
     <form method="post" class="add-dish-form">
         {% csrf_token %}
-        {{ form.as_p }}
-
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="text-danger">
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
         <button type="submit">Add Dish</button>
     </form>
+
 </div>
 
 <a href="{% url 'menu:menu_list' %}">Back to Menu List</a>

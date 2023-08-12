@@ -1,18 +1,27 @@
+from django.db import models
 from django import forms
-from .models import Dish
+from .models import Dish 
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class DishForm(forms.ModelForm):
     class Meta:
         model = Dish
-        fields = ['dish_name', 'price', 'availability']
+        fields = ['dish_name', 'price', 'availability', 'image_url']
+        widgets = {
+            'image_url': forms.URLInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'dish_name': 'Dish Name',
+            'price': 'Price',
+            'availability': 'Availability',
+            'image_url': 'Image URL',
+        }
 
-    def clean_price(self):
-        price = self.cleaned_data.get('price')
-        if price < 0:
-            raise forms.ValidationError("Price cannot be negative.")
-        return price
+
+    def __str__(self):
+        return self.dish_name
+
 
 
 class OrderForm(forms.Form):

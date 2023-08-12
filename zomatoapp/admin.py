@@ -3,7 +3,7 @@ from .models import Dish, Order, OrderItem
 
 @admin.register(Dish)
 class DishAdmin(admin.ModelAdmin):
-    list_display = ('dish_name', 'price', 'availability')
+    list_display = ('dish_name', 'price', 'availability','image_url')
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):

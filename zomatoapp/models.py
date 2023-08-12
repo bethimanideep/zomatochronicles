@@ -2,11 +2,14 @@ from django.db import models
 
 # Create your models here.
 class Dish(models.Model):
-    dish_name=models.CharField(max_length=100)
-    price=models.DecimalField(max_digits=5,decimal_places=2)
-    availability=models.BooleanField(default=True)
+    dish_name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    availability = models.BooleanField(default=True)
+    image_url = models.CharField(max_length=100000)
+
     def __str__(self):
         return self.dish_name
+
 
 class Order(models.Model):
     customer_name=models.CharField(max_length=100)

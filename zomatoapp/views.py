@@ -32,10 +32,21 @@ def updatestatus(request):
     return render(request, 'menu/updatestatus.html', {'orders': orders, 'filter_status': filter_status})
 
 
+# Rest of your views
+
 def load_order_form(request):
-    form = OrderForm()
+    form = OrderForm(request.POST or None)
     dishes = Dish.objects.filter(availability=True)
+    if request.method == 'POST':
+        selected_dishes = request.POST.getlist('dishes')
+        form.fields['dishes'].queryset = Dish.objects.filter(pk__in=selected_dishes)
+
     return render(request, 'menu/take_order.html', {'form': form, 'dishes': dishes})
+
+
+from django.db import transaction
+
+# ... (other views)
 
 def place_order(request):
     if request.method == 'POST':
@@ -43,15 +54,17 @@ def place_order(request):
         if form.is_valid():
             customer_name = form.cleaned_data['customer_name']
             order = Order.objects.create(customer_name=customer_name)
-            for dish in form.cleaned_data['dishes']:
-                quantity_field_name = f'quantity_{dish.pk}'
-                quantity = int(request.POST.get(quantity_field_name, 0))
-                if quantity > 0:
-                    OrderItem.objects.create(order=order, dish=dish, quantity=quantity)
-                    
-                orders = Order.objects.all()
-                filter_status = request.POST.get('filter_status', '')
-                return render(request, 'menu/updatestatus.html', {'orders': orders, 'filter_status': filter_status})
+
+            # Use a transaction to ensure that all order items are saved correctly
+            with transaction.atomic():
+                for dish in form.cleaned_data['dishes']:
+                    quantity_field_name = f'quantity_{dish.pk}'
+                    quantity = int(request.POST.get(quantity_field_name, 0))
+                    if quantity > 0:
+                        OrderItem.objects.create(order=order, dish=dish, quantity=quantity)
+
+            return redirect('menu:updatestatus')  # Redirect to updatestatus view after placing the order
+
     return redirect('menu:load_order_form')  # Redirect back to the form page if form is not valid or GET request
 
 
@@ -65,11 +78,13 @@ def add_dish(request):
     if request.method == 'POST':
         form = DishForm(request.POST)
         if form.is_valid():
-            form.save()
+            dish = form.save(commit=False)  # Save without committing
+            dish.save()  # Now save the image URL
             return redirect('menu:menu_list')
     else:
         form = DishForm()
     return render(request, 'menu/add_dish.html', {'form': form})
+
 
 def edit_dish(request, dish_id):
     dish = Dish.objects.get(pk=dish_id)
